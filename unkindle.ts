@@ -115,7 +115,7 @@ class UserInterface {
       outputDirectory,
       startPage,
       maxPages,
-      captureDelay: 1000
+      captureDelay: 100
     };
   }
 
@@ -261,7 +261,7 @@ class BookScreenshotAutomator {
       await new Promise(resolve => setTimeout(resolve, this.captureDelay));
       
       const { x, y, width, height } = this.windowBounds;
-      await Utils.execAsync(`screencapture -R${x},${y},${width},${height} ${outputPath}`);
+      await Utils.execAsync(`screencapture -xR${x},${y},${width},${height} ${outputPath}`);
       
       // Verify the file was created and has content
       const stats = await fs.stat(outputPath);
