@@ -24,7 +24,7 @@ npm install
 1. Open your book in the Kindle for Mac application
 2. Run the program:
 ```bash
-npm start
+npm run
 ```
 
 3. Follow the prompts to:
@@ -41,3 +41,7 @@ The program will create a PDF in the `books/<book_title>` directory.
 ## Note
 
 This tool is for personal use only. Please respect copyright laws and Amazon's terms of service.
+
+## License
+
+This project is licensed under the MIT License, see the [LICENSE](LICENSE) file for details.# unkindle

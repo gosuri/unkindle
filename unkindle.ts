@@ -172,6 +172,9 @@ class BookScreenshotAutomator {
   async getWindowBounds(): Promise<WindowBounds> {
     const script = `
       tell application "Amazon Kindle"
+        if not running then
+          return "NOT_RUNNING"
+        end if
         activate
       end tell
       delay 0.5
@@ -184,14 +187,28 @@ class BookScreenshotAutomator {
 
     try {
       const { stdout } = await Utils.execAsync(`osascript -e '${script}'`);
+      
+      if (stdout.trim() === "NOT_RUNNING") {
+        throw new Error(
+          "Cannot find Kindle application. Please make sure:\n" +
+          "1. Kindle for Mac is installed\n" +
+          "2. The application is open\n" +
+          "3. You have a book opened in the Kindle app"
+        );
+      }
+
       const matches = stdout.match(/-?\d+/g);
       
       if (!matches || matches.length !== 4) {
-        throw new Error('Failed to get window bounds');
+        throw new Error(
+          "Cannot detect Kindle window. Please make sure:\n" +
+          "1. Kindle is not minimized\n" +
+          "2. You have a book opened and visible\n" +
+          "3. The Kindle window is on your main screen"
+        );
       }
 
       const [x, y, width, height] = matches.map(Number);
-      // Adjust y position and height to exclude title bar (22px)
       const titleBarHeight = 22;
       return { 
         x, 
@@ -200,7 +217,15 @@ class BookScreenshotAutomator {
         height: height - titleBarHeight 
       };
     } catch (error) {
-      throw new Error(`Failed to get window bounds: ${error}`);
+      if (error instanceof Error && error.message.includes("Cannot")) {
+        throw error; // Re-throw our custom errors
+      }
+      throw new Error(
+        "Failed to interact with Kindle application. Please make sure:\n" +
+        "1. Kindle for Mac is installed and running\n" +
+        "2. You have granted screen recording permissions to your terminal app\n" +
+        "3. You're running macOS"
+      );
     }
   }
 
