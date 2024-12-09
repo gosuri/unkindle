@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import * as path from 'path';
+import * as fs from 'fs/promises';
 import { BookScreenshotAutomator } from './unkindle';
 import { enable } from '@electron/remote/main';
 import * as os from 'os';
@@ -16,8 +17,6 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js')
     }
   });
-
-  mainWindow.webContents.openDevTools({ mode: 'right' });
 
   mainWindow.webContents.on('did-finish-load', () => {
     console.log('Window loaded successfully');
@@ -87,6 +86,13 @@ ipcMain.handle('select-directory', async () => {
   return null;
 });
 
-ipcMain.handle('get-desktop-path', () => {
-    return path.join(os.homedir(), 'Desktop');
+ipcMain.handle('get-desktop-path', async () => {
+    const defaultDir = path.join(os.homedir(), 'Desktop', 'Unkindle');
+    // Create the directory if it doesn't exist
+    try {
+        await fs.mkdir(defaultDir, { recursive: true });
+    } catch (error) {
+        console.error('Failed to create default directory:', error);
+    }
+    return defaultDir;
 }); 
