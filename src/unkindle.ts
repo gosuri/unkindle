@@ -266,22 +266,24 @@ export class BookScreenshotAutomator {
     }
   }
 
-  async cleanup(): Promise<void> {
+  async cleanup(): Promise<string | undefined> {
     if (this.screenshots.length > 0 && !this.isCancelled) {
-      try {
-        await this.createPDF();
-      } catch (error) {
-        throw new Error(`Error creating PDF: ${error}`);
-      }
+        try {
+            const pdfPath = await this.createPDF();
+            return pdfPath;
+        } catch (error) {
+            throw new Error(`Error creating PDF: ${error}`);
+        }
     }
     
     if (this.isCancelled && this.screenshots.length > 0) {
-      const lastScreenshot = this.screenshots[this.screenshots.length - 1];
-      try {
-        await fs.unlink(lastScreenshot.path);
-      } catch (error) {
-        console.error('Error cleaning up partial capture:', error);
-      }
+        const lastScreenshot = this.screenshots[this.screenshots.length - 1];
+        try {
+            await fs.unlink(lastScreenshot.path);
+        } catch (error) {
+            console.error('Error cleaning up partial capture:', error);
+        }
     }
+    return undefined;
   }
 }

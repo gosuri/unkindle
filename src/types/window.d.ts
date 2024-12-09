@@ -8,5 +8,10 @@ declare global {
       startCapture: (options: CaptureOptions) => Promise<CaptureResult>;
       stopCapture: () => Promise<void>;
     };
+    electronAPI: ElectronAPI;
   }
+}
+
+interface ElectronAPI {
+  openFile: (filePath: string) => Promise<string>;
 } 

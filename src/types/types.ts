@@ -21,4 +21,5 @@ export interface CaptureResult {
   success: boolean;
   count?: number;
   error?: string;
+  pdfPath?: string;
 } 

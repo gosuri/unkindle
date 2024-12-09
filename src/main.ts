@@ -57,9 +57,9 @@ ipcMain.handle('start-capture', async (event, options) => {
     );
 
     const screenshots = await automator.processBook();
-    await automator.cleanup();
+    const pdfPath = await automator.cleanup();
     console.log(`Main process: Capture completed successfully. Captured ${screenshots.length} pages.`);
-    return { success: true, count: screenshots.length };
+    return { success: true, count: screenshots.length, pdfPath };
   } catch (error) {
     console.error('Main process: Capture failed:', error);
     return { success: false, error: error instanceof Error ? error.message : String(error) };

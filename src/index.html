@@ -47,6 +47,14 @@
             background: #e8f5e9;
             color: #2e7d32;
         }
+        .pdf-link {
+            color: #007AFF;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .pdf-link:hover {
+            color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -76,6 +84,10 @@
             <button id="stopBtn" disabled>Stop Capture</button>
         </div>
         <div id="status" class="status"></div>
+        <div id="pdfLink" class="status" style="display: none;">
+            <p>PDF generated successfully! Click below to open:</p>
+            <a href="#" id="openPdfLink" style="color: #007AFF; text-decoration: underline;"></a>
+        </div>
     </div>
     <script>
         console.log('HTML loaded, attempting to load renderer...');

@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer, shell } from 'electron';
 import { CaptureOptions, CaptureResult } from './types/types';
 
 // Expose protected methods that allow the renderer process to use
@@ -12,3 +12,8 @@ contextBridge.exposeInMainWorld(
     stopCapture: () => ipcRenderer.invoke('stop-capture')
   }
 ); 
+
+contextBridge.exposeInMainWorld('electronAPI', {
+    // ... existing exposed methods ...
+    openFile: (filePath: string) => shell.openPath(filePath),
+}); 
