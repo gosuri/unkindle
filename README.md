@@ -4,6 +4,9 @@ This program creates a PDF version of books from Kindle for personal use. It uti
 
 I created this program to train an Agent to answer questions about the books I read. I found it nearly impossible to extract PDF versions of the books from Kindle.
 
+[!demo](https://github.com/user-attachments/assets/5d71bd55-e59a-46a1-b5ba-5325b6f4d9d6)
+
+
 ## Prerequisites
 
 - Node.js 16 or higher
