@@ -1,17 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-
-export type CaptureOptions = {
-  outputDirectory: string;
-  startPage: number;
-  maxPages: number | null;
-  captureDelay: number;
-};
-
-export type CaptureResult = {
-  success: boolean;
-  count?: number;
-  error?: string;
-};
+import { CaptureOptions, CaptureResult } from './types/types';
 
 // Expose protected methods that allow the renderer process to use
 // ipcRenderer without exposing the entire object

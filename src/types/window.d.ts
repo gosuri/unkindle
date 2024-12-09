@@ -1,4 +1,4 @@
-import { CaptureOptions, CaptureResult } from '../preload';
+import { CaptureOptions, CaptureResult } from '../types/types';
 
 declare global {
   interface Window {

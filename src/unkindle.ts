@@ -6,18 +6,7 @@ import { PDFDocument } from 'pdf-lib';
 import sharp from 'sharp';
 import * as crypto from 'crypto';
 import * as os from 'os';
-
-interface Screenshot {
-  path: string;
-  pageNumber: number;
-}
-
-interface WindowBounds {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
+import { Screenshot, WindowBounds } from './types/types';
 
 class Utils {
   static readonly execAsync = promisify(exec);
