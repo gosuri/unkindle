@@ -5,6 +5,13 @@ interface CaptureState {
     pagesProcessed: number;
 }
 
+interface CaptureResult {
+    success?: boolean;
+    error?: string;
+    count?: number;
+    pdfPath?: string;
+}
+
 const state: CaptureState = {
     isCapturing: false,
     outputDir: '',
@@ -85,12 +92,23 @@ stopBtn.addEventListener('click', async () => {
     const endTime = new Date();
     if (state.startTime) {
         const duration = Math.round((endTime.getTime() - state.startTime.getTime()) / 1000);
-        showStatus(
-            `Capture stopped manually at ${endTime.toLocaleTimeString()}\n` +
-            `Pages processed: ${state.pagesProcessed}\n` +
-            `Duration: ${duration} seconds`,
-            'success'
-        );
+        
+        statusDiv.innerHTML = 
+            `Capture stopped manually at ${endTime.toLocaleTimeString()}<br>` +
+            `Pages processed: ${state.pagesProcessed}<br>` +
+            `Duration: ${duration} seconds<br>` +
+            `Check the Output Directory for the generated PDF`;
+        
+        // Update click handler for the output directory
+        const dirLink = statusDiv.querySelector('.pdf-link');
+        if (dirLink) {
+            dirLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.electronAPI.openFile(state.outputDir);
+            });
+        }
+        
+        statusDiv.className = 'status success';
     }
     updateUIState();
 });
@@ -130,7 +148,7 @@ function showPdfLink(pdfPath: string) {
     const fileName = pdfPath.split('/').pop() || pdfPath.split('\\').pop() || pdfPath;
     
     // Create status message with both PDF and directory links
-    statusDiv.innerHTML = `The generated PDF is saved as <a href="#" class="pdf-link">${fileName}</a> in the <a href="#" class="pdf-link">${state.outputDir}</a> directory`;
+    statusDiv.innerHTML = `The generated PDF is saved as <a href="#" class="pdf-link">${fileName}</a> in the <a href="${state.outputDir}" class="pdf-link">Output Directory</a>`;
     
     // Add click handlers to both links
     const links = statusDiv.querySelectorAll('.pdf-link');
