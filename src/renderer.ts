@@ -89,17 +89,22 @@ function showPdfLink(pdfPath: string) {
     // Extract just the filename from the full path
     const fileName = pdfPath.split('/').pop() || pdfPath.split('\\').pop() || pdfPath;
     
-    // Create status message with inline link
-    statusDiv.innerHTML = `The PDF is saved as <a href="#" class="pdf-link">${fileName}</a> in the Output directory`;
+    // Create status message with both PDF and directory links
+    statusDiv.innerHTML = `The generated PDF is saved as <a href="#" class="pdf-link">${fileName}</a> in the <a href="#" class="pdf-link">${state.outputDir}</a> directory`;
     
-    // Add click handler to the link
-    const pdfLink = statusDiv.querySelector('.pdf-link');
-    if (pdfLink) {
-        pdfLink.addEventListener('click', (e) => {
+    // Add click handlers to both links
+    const links = statusDiv.querySelectorAll('.pdf-link');
+    links.forEach((link, index) => {
+        link.addEventListener('click', (e) => {
             e.preventDefault();
-            window.electronAPI.openFile(pdfPath);
+            // First link opens the PDF, second link opens the directory
+            if (index === 0) {
+                window.electronAPI.openFile(pdfPath);
+            } else {
+                window.electronAPI.openFile(state.outputDir);
+            }
         });
-    }
+    });
     
     // Add success styling to status
     statusDiv.className = 'status success';
