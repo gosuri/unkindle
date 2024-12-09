@@ -7,7 +7,7 @@
     "start": "electron .",
     "build": "tsc",
     "watch": "tsc -w",
-    "dev": "npm run build && electron .",
+    "dev": "NODE_ENV=development npm run build && electron .",
     "make": "electron-forge make"
   },
   "dependencies": {

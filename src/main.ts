@@ -4,6 +4,7 @@ import * as fs from 'fs/promises';
 import { BookScreenshotAutomator } from './unkindle';
 import { enable } from '@electron/remote/main';
 import * as os from 'os';
+import { PathUtils } from './shared/utils/paths';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -87,12 +88,7 @@ ipcMain.handle('select-directory', async () => {
 });
 
 ipcMain.handle('get-desktop-path', async () => {
-    const defaultDir = path.join(os.homedir(), 'Desktop', 'Unkindle');
-    // Create the directory if it doesn't exist
-    try {
-        await fs.mkdir(defaultDir, { recursive: true });
-    } catch (error) {
-        console.error('Failed to create default directory:', error);
-    }
-    return defaultDir;
+    const outputPath = PathUtils.getDefaultOutputPath();
+    await PathUtils.ensureDirectoryExists(outputPath);
+    return outputPath;
 }); 
