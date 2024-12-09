@@ -6,6 +6,7 @@ import { PDFDocument } from 'pdf-lib';
 import sharp from 'sharp';
 import * as readline from 'readline';
 import sanitize from 'sanitize-filename';
+import * as crypto from 'crypto';
 
 interface Screenshot {
   path: string;
@@ -55,6 +56,11 @@ class Utils {
     } catch {
       return 0;
     }
+  }
+
+  static async calculateFileHash(filePath: string): Promise<string> {
+    const fileBuffer = await fs.readFile(filePath);
+    return crypto.createHash('md5').update(fileBuffer).digest('hex');
   }
 }
 
@@ -315,17 +321,29 @@ class BookScreenshotAutomator {
     console.log('Press "c" to stop capturing and create PDF');
     console.log('Press "Esc" or Ctrl+C to cancel everything\n');
 
+    let lastScreenshotHash: string | null = null;
+
     try {
       while (!this.isCancelled && !this.stopCapture && 
              (!this.maxPages || this.pagesProcessed < this.maxPages)) {
         console.log(`Capturing page ${this.currentPage} (${this.pagesProcessed + 1}/${this.maxPages || '∞'})`);
         
         const screenshotPath = await this.captureScreenshot();
-        
+        const currentHash = await Utils.calculateFileHash(screenshotPath);
+
+        // Compare with previous screenshot
+        if (lastScreenshotHash === currentHash) {
+          console.log('Reached end of book (no more pages to turn)');
+          await fs.unlink(screenshotPath); // Remove duplicate screenshot
+          break;
+        }
+
         this.screenshots.push({
           path: screenshotPath,
           pageNumber: this.currentPage
         });
+
+        lastScreenshotHash = currentHash;
 
         if (!this.isCancelled && !this.stopCapture) {
           console.log('Navigating to next page...');
