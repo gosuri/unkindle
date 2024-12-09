@@ -7,8 +7,10 @@
     "start": "electron .",
     "build": "tsc",
     "watch": "tsc -w",
-    "dev": "NODE_ENV=development npm run build && electron .",
-    "make": "electron-forge make"
+    "dist": "npm run build && electron-builder",
+    "dist:mac": "npm run build && electron-builder --mac",
+    "dist:win": "npm run build && electron-builder --win",
+    "dist:linux": "npm run build && electron-builder --linux"
   },
   "dependencies": {
     "@electron/remote": "^2.1.2",
@@ -23,6 +25,7 @@
     "@electron-forge/maker-zip": "^6.1.1",
     "@types/node": "^18.16.0",
     "electron": "^24.1.2",
+    "electron-builder": "^25.1.8",
     "typescript": "^5.0.4"
   },
   "config": {
@@ -41,6 +44,39 @@
           "name": "@electron-forge/maker-zip"
         }
       ]
+    }
+  },
+  "build": {
+    "appId": "com.yourdomain.unkindle",
+    "productName": "Unkindle",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "src/index.html"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "build/icon.icns"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility"
     }
   }
 }
