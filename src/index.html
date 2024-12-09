@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unkindle</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .pdf-link {
+            color: #007AFF;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .pdf-link:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Unkindle</h1>
+        <div>
+            <label>Output Directory:</label>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="outputDir" readonly value="">
+                <button id="browseBtn">Browse</button>
+            </div>
+        </div>
+        <div>
+            <label>Start Page:</label>
+            <input type="number" id="startPage" value="1" min="1">
+        </div>
+        <div>
+            <label>Max Pages (optional):</label>
+            <input type="number" id="maxPages" min="1">
+        </div>
+        <div>
+            <label>Capture Delay (ms):</label>
+            <input type="number" id="captureDelay" value="1000" min="100">
+        </div>
+        <div style="margin-top: 20px;">
+            <button id="startBtn">Start Capture</button>
+            <button id="stopBtn" disabled>Stop Capture</button>
+        </div>
+        <div id="status" class="status"></div>
+        <div id="pdfLink" class="status" style="display: none;">
+            <p>PDF generated successfully! Click below to open:</p>
+            <a href="#" id="openPdfLink" style="color: #007AFF; text-decoration: underline;"></a>
+        </div>
+    </div>
+    <script>
+        console.log('HTML loaded, attempting to load renderer...');
+    </script>
+    <script src="../dist/renderer.js"></script>
+</body>
+</html> 
