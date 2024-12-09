@@ -72,9 +72,6 @@ startBtn.addEventListener('click', async () => {
                 `Duration: ${duration} seconds`,
                 'success'
             );
-            if (result.pdfPath) {
-                showPdfLink(result.pdfPath);
-            }
         } else {
             showStatus(`Capture failed: ${result.error}`, 'error');
         }
@@ -93,22 +90,12 @@ stopBtn.addEventListener('click', async () => {
     if (state.startTime) {
         const duration = Math.round((endTime.getTime() - state.startTime.getTime()) / 1000);
         
-        statusDiv.innerHTML = 
-            `Capture stopped manually at ${endTime.toLocaleTimeString()}<br>` +
-            `Pages processed: ${state.pagesProcessed}<br>` +
-            `Duration: ${duration} seconds<br>` +
-            `Check the Output Directory for the generated PDF`;
-        
-        // Update click handler for the output directory
-        const dirLink = statusDiv.querySelector('.pdf-link');
-        if (dirLink) {
-            dirLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                window.electronAPI.openFile(state.outputDir);
-            });
-        }
-        
-        statusDiv.className = 'status success';
+        showStatus(
+            `Capture stopped manually at ${endTime.toLocaleTimeString()}\n` +
+            `Pages processed: ${state.pagesProcessed}\n` +
+            `Duration: ${duration} seconds\n`,
+            'success'
+        );
     }
     updateUIState();
 });
