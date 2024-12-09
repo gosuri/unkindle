@@ -7,6 +7,7 @@ declare global {
       selectDirectory: () => Promise<string | null>;
       startCapture: (options: CaptureOptions) => Promise<CaptureResult>;
       stopCapture: () => Promise<void>;
+      onCaptureProgress: (callback: (pageNumber: number) => void) => void;
     };
     electronAPI: ElectronAPI;
   }

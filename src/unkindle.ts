@@ -7,6 +7,7 @@ import sharp from 'sharp';
 import * as crypto from 'crypto';
 import * as os from 'os';
 import { Screenshot, WindowBounds } from './types/types';
+import { EventEmitter } from 'events';
 
 class Utils {
   static readonly execAsync = promisify(exec);
@@ -39,7 +40,7 @@ async function getAllScreenshotsInDirectory(directory: string): Promise<Screensh
     .filter(screenshot => !isNaN(screenshot.pageNumber));
 }
 
-export class BookScreenshotAutomator {
+export class BookScreenshotAutomator extends EventEmitter {
   private outputDir: string;
   private currentPage: number = 1;
   private pagesProcessed: number = 0;
@@ -56,6 +57,7 @@ export class BookScreenshotAutomator {
     startPage: number = 1,
     maxPages: number | null = null
   ) {
+    super();
     this.outputDir = outputDirectory;
     this.captureDelay = captureDelay;
     this.currentPage = startPage;

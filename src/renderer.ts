@@ -1,11 +1,14 @@
 interface CaptureState {
     isCapturing: boolean;
     outputDir: string;
+    startTime?: Date;
+    pagesProcessed: number;
 }
 
 const state: CaptureState = {
     isCapturing: false,
     outputDir: '',
+    pagesProcessed: 0
 };
 
 // DOM Elements
@@ -38,8 +41,12 @@ browseBtn.addEventListener('click', async () => {
 startBtn.addEventListener('click', async () => {
     try {
         state.isCapturing = true;
+        state.startTime = new Date();
+        state.pagesProcessed = 0;
         updateUIState();
         pdfLinkDiv.style.display = 'none';
+        
+        showStatus(`Starting capture at ${state.startTime.toLocaleTimeString()}...`, 'success');
         
         const result = await window.api.startCapture({
             outputDirectory: state.outputDir,
@@ -48,8 +55,16 @@ startBtn.addEventListener('click', async () => {
             captureDelay: parseInt(captureDelayInput.value),
         });
 
+        const endTime = new Date();
+        const duration = Math.round((endTime.getTime() - state.startTime.getTime()) / 1000);
+
         if (result.success) {
-            showStatus(`Capture completed successfully! Captured ${result.count} pages.`, 'success');
+            showStatus(
+                `Capture completed successfully at ${endTime.toLocaleTimeString()}!\n` +
+                `Total pages: ${result.count}\n` +
+                `Duration: ${duration} seconds`,
+                'success'
+            );
             if (result.pdfPath) {
                 showPdfLink(result.pdfPath);
             }
@@ -67,7 +82,32 @@ startBtn.addEventListener('click', async () => {
 stopBtn.addEventListener('click', async () => {
     await window.api.stopCapture();
     state.isCapturing = false;
+    const endTime = new Date();
+    if (state.startTime) {
+        const duration = Math.round((endTime.getTime() - state.startTime.getTime()) / 1000);
+        showStatus(
+            `Capture stopped manually at ${endTime.toLocaleTimeString()}\n` +
+            `Pages processed: ${state.pagesProcessed}\n` +
+            `Duration: ${duration} seconds`,
+            'success'
+        );
+    }
     updateUIState();
+});
+
+// Add a new IPC handler for progress updates
+window.api.onCaptureProgress((pageNumber: number) => {
+    state.pagesProcessed = pageNumber;
+    if (state.startTime) {
+        const currentTime = new Date();
+        const duration = Math.round((currentTime.getTime() - state.startTime.getTime()) / 1000);
+        showStatus(
+            `Capturing in progress...\n` +
+            `Pages processed: ${pageNumber}\n` +
+            `Duration: ${duration} seconds`,
+            'success'
+        );
+    }
 });
 
 // Helper functions
@@ -81,7 +121,7 @@ function updateUIState() {
 }
 
 function showStatus(message: string, type: 'success' | 'error') {
-    statusDiv.textContent = message;
+    statusDiv.innerHTML = message.split('\n').join('<br>');
     statusDiv.className = `status ${type}`;
 }
 

@@ -9,7 +9,10 @@ contextBridge.exposeInMainWorld(
     getDesktopPath: () => ipcRenderer.invoke('get-desktop-path'),
     selectDirectory: () => ipcRenderer.invoke('select-directory'),
     startCapture: (options: CaptureOptions) => ipcRenderer.invoke('start-capture', options),
-    stopCapture: () => ipcRenderer.invoke('stop-capture')
+    stopCapture: () => ipcRenderer.invoke('stop-capture'),
+    onCaptureProgress: (callback: (pageNumber: number) => void) => {
+        ipcRenderer.on('capture-progress', (_, pageNumber) => callback(pageNumber));
+    }
   }
 ); 
 

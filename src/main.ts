@@ -5,6 +5,7 @@ import { BookScreenshotAutomator } from './unkindle';
 import { enable } from '@electron/remote/main';
 import * as os from 'os';
 import { PathUtils } from './shared/utils/paths';
+import { EventEmitter } from 'events';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -56,6 +57,10 @@ ipcMain.handle('start-capture', async (event, options) => {
       options.startPage,
       options.maxPages
     );
+
+    automator.on('progress', (pageNumber: number) => {
+      mainWindow?.webContents.send('capture-progress', pageNumber);
+    });
 
     const screenshots = await automator.processBook();
     const pdfPath = await automator.cleanup();
