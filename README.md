@@ -6,7 +6,6 @@ I created this program to train an Agent to answer questions about the books I r
 
 [!demo](https://github.com/user-attachments/assets/5d71bd55-e59a-46a1-b5ba-5325b6f4d9d6)
 
-
 ## Prerequisites
 
 - Node.js 16 or higher
@@ -26,8 +25,9 @@ npm install
 
 1. Open your book in the Kindle for Mac application
 2. Run the program:
+
 ```bash
-npm run
+npm start
 ```
 
 3. Follow the prompts to:
